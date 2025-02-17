@@ -36,10 +36,10 @@ punct = "."
 fisier2 = fisier.rsplit(punct, 1)
 
 try:  
-  fisierNou = fisier2[0] + " - corectat diacritice" + punct + fisier2[1]
+  fisierNou = fisier2[0] + "-corectat" + punct + fisier2[1]
 except:
   print("Fișier fără extensie")
-  fisierNou = fisier2[0] + " - corectat diacritice"
+  fisierNou = fisier2[0] + "-corectat"
 
 
 f = open(fisierNou, "w")
