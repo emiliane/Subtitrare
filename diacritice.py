@@ -18,19 +18,19 @@ except:
 
 print("Citit fișier subtitrare: " + fisier)
 
-s = s.replace("ã", "ă")
 s = s.replace("Ã", "Ă")
-s = s.replace("º", "ș")
+s = s.replace("ã", "ă")
 s = s.replace("ª", "Ș")
-s = s.replace("þ", "ț")
+s = s.replace("º", "ș")
 s = s.replace("Þ", "Ț")
+s = s.replace("þ", "ț")
 
-s = s.replace("\u00e3", "\u0103") #ă
 s = s.replace("\u00c3", "\u0102") #Ă
-s = s.replace("\u015f", "\u0219") #ș
+s = s.replace("\u00e3", "\u0103") #ă
 s = s.replace("\u015e", "\u0218") #Ș
-s = s.replace("\u0163", "\u021b") #ț
+s = s.replace("\u015f", "\u0219") #ș
 s = s.replace("\u0162", "\u021a") #Ț
+s = s.replace("\u0163", "\u021b") #ț
 
 punct = "."
 fisier2 = fisier.rsplit(punct, 1)
@@ -40,7 +40,6 @@ try:
 except:
   print("Fișier fără extensie")
   fisierNou = fisier2[0] + "-corectat"
-
 
 f = open(fisierNou, "w")
 f.write(s)
