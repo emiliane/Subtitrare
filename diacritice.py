@@ -1,6 +1,6 @@
 import sys
 
-fisier = sys.argv[1] # "1.srt"
+fisier = sys.argv[1]
 
 codare1 = "utf-8"
 codare2 = "iso-8859-1"
