@@ -25,12 +25,12 @@ s = s.replace("º", "ș")
 s = s.replace("Þ", "Ț")
 s = s.replace("þ", "ț")
 
-s = s.replace("\u00c3", "\u0102") #Ă
-s = s.replace("\u00e3", "\u0103") #ă
-s = s.replace("\u015e", "\u0218") #Ș
-s = s.replace("\u015f", "\u0219") #ș
-s = s.replace("\u0162", "\u021a") #Ț
-s = s.replace("\u0163", "\u021b") #ț
+s = s.replace("\u00c3", "Ă") #Ă
+s = s.replace("\u00e3", "ă") #ă
+s = s.replace("\u015e", "Ș") #Ș
+s = s.replace("\u015f", "ș") #ș
+s = s.replace("\u0162", "Ț") #Ț
+s = s.replace("\u0163", "ț") #ț
 
 punct = "."
 fisier2 = fisier.rsplit(punct, 1)
