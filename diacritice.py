@@ -5,6 +5,12 @@ fisier = sys.argv[1]
 codare1 = "utf-8"
 codare2 = "iso-8859-1"
 
+
+def citesteFisier(fname, codare):
+    f = open(fname, "r", encoding=codare)
+    return f
+
+
 try:
     f = citesteFisier(fisier, codare1)
     s = f.read()
@@ -58,8 +64,3 @@ f.write(s)
 f.close()
 
 print("Scris fișier subtitrare corectat: " + fisierNou)
-
-
-def citesteFisier(fname, codare):
-    f = open(fname, "r", encoding=codare)
-    return f
