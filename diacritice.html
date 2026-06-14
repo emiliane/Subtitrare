@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
 
+<html>
+   
+    <body>
+        <h1>Corectare text</h1>
+        <textarea id="introdus" rows="9" maxRows="44"
+      placeholder="Introducere text…" style="width:100%;"></textarea>
+    <button type="button" onclick="corectare()">Corectează</button>
+    
+<textarea id="corectat" rows="9" maxRows="44"
+      placeholder="Textul corectat…" style="width:100%;"></textarea>  
+      
+    <script>
+    
+    function corectare(text) {
+      if (!text) {
+        text = document.getElementById("introdus").value;
+        text = diacritice(text);
+        document.getElementById("corectat").value = text;
+      }
+    }
+    
+    function diacritice(s) {
+        
+        s = s.trim();
+        while (s.includes('  ')) {
+            s = s.replace(/  /g, ' ');
+        }
+        
+        s = s.replace(/ \n/g, '\n');
+        
+        s = s.replace(/Ã/g, 'Ă');
+        s = s.replace(/ã/g, 'ă');
+        s = s.replace(/ª/g, 'Ș');
+        s = s.replace(/º/g, 'ș');
+        s = s.replace(/Þ/g, 'Ț');
+        s = s.replace(/þ/g, 'ț');
+        
+        s = s.replace(/\u00c3/g, 'Ă');
+        s = s.replace(/\u00e3/g, 'ă');
+        s = s.replace(/\u015e/g, 'Ș');
+        s = s.replace(/\u015f/g, 'ș');
+        s = s.replace(/\u0162/g, 'Ț');
+        s = s.replace(/\u0163/g, 'ț');
+        
+        s = s.replace(/  /g, ' ');
+        s = s.replace(/ \./g, '.');
+        s = s.replace(/ :/g, ':');
+        s = s.replace(/ ,/g, ',');
+        s = s.replace(/ ;/g, ';');
+        s = s.replace(/ !/g, '!');
+        s = s.replace(/ \?/g, '?');
+        s = s.replace(/\.{3}/g, '…');
+        s = s.replace(//g, ' ');
+        
+        return(s);
+    }
+
+    </script>
+
+    </body>
+</html>
