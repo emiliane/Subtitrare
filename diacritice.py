@@ -68,3 +68,17 @@ f.write(s)
 f.close()
 
 print("Scris fișier subtitrare corectat: " + fisierNou)
+
+lines1 = s.splitlines()
+lines2 = s2.splitlines()
+
+c = 0
+for i in range(len(lines1)):
+    if lines1[i] != lines2[i]:
+        c = c + 1
+        print("Linia " + str(i) + '.')
+        print(lines2[i])
+        print(lines1[i])
+
+if c > 0:
+    print('Modificări la ', c ,' linii.')
