@@ -10,13 +10,17 @@ def citesteFisier(fname, codare):
     f = open(fname, "r", encoding=codare)
     return f
 
+def citire():
+    try:
+        f = citesteFisier(fisier, codare1)
+        s = f.read()
+    except:
+        f = citesteFisier(fisier, codare2)
+        s = f.read()
+    
+    return s
 
-try:
-    f = citesteFisier(fisier, codare1)
-    s = f.read()
-except:
-    f = citesteFisier(fisier, codare2)
-    s = f.read()
+s = citire()
 
 print("Citit fișier subtitrare: " + fisier)
 
