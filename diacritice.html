@@ -1,50 +1,61 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-
+<script src="https://unpkg.com/detect-file-encoding-and-language/umd/language-encoding.min.js"></script>
 <html>
-   
-    <body>
-        <h1>Corectare text</h1>
-        <textarea id="introdus" rows="9" maxRows="44"
-      placeholder="Introducere text…" style="width:100%;"></textarea>
-    <button type="button" onclick="corectare()">Corectează</button>
-    
-<textarea id="corectat" rows="9" maxRows="44"
-      placeholder="Textul corectat…" style="width:100%;"></textarea>  
-      
-    <script>
-    
+
+<body>
+    <h2>Corectare text</h2>
+    <p>
+        Încarcă fișier <input type="file" id="fileInput" multiple><br>
+    </p>
+    <p>Introducere text <br>
+        <textarea id="introdus" rows="12" maxRows="44" placeholder="Introducere text…"
+            style="width:100%;"></textarea><br>
+        <button type="button" onclick="corectare()">Corectează</button>
+    </p>
+    <p>Textul corectat <br>
+        <textarea id="corectat" rows="12" maxRows="44" placeholder="Textul corectat…" style="width:100%;"></textarea>
+    </p>
+    <button onclick="downloadFile()">Descarcă fișier</button>
+    <p>Modificări <br>
+        <textarea id="modificari" rows="9" maxRows="44" placeholder="Modificări" style="width:100%;"></textarea>
+    </p>
+</body>
+<script>
+    var allfiles = [];
+
     function corectare(text) {
-      if (!text) {
-        text = document.getElementById("introdus").value;
-        text = diacritice(text);
-        document.getElementById("corectat").value = text;
-      }
+        if (!text) {
+            text = document.getElementById("introdus").value;
+            textcorectat = diacritice(text);
+            document.getElementById("corectat").value = textcorectat;
+            document.getElementById("modificari").value = modificari(text, textcorectat);
+        }
     }
-    
+
     function diacritice(s) {
-        
+
         s = s.trim();
         while (s.includes('  ')) {
             s = s.replace(/  /g, ' ');
         }
-        
+
         s = s.replace(/ \n/g, '\n');
-        
+
         s = s.replace(/Ã/g, 'Ă');
         s = s.replace(/ã/g, 'ă');
         s = s.replace(/ª/g, 'Ș');
         s = s.replace(/º/g, 'ș');
         s = s.replace(/Þ/g, 'Ț');
         s = s.replace(/þ/g, 'ț');
-        
+
         s = s.replace(/\u00c3/g, 'Ă');
         s = s.replace(/\u00e3/g, 'ă');
         s = s.replace(/\u015e/g, 'Ș');
         s = s.replace(/\u015f/g, 'ș');
         s = s.replace(/\u0162/g, 'Ț');
         s = s.replace(/\u0163/g, 'ț');
-        
+
         s = s.replace(/  /g, ' ');
         s = s.replace(/\.{3}/g, '…');
         s = s.replace(/ \./g, '.');
@@ -54,11 +65,93 @@
         s = s.replace(/ !/g, '!');
         s = s.replace(/ \?/g, '?');
         s = s.replace(//g, ' ');
-        
-        return(s);
+
+        return (s);
     }
 
-    </script>
+    function modificari(a, b) {
 
-    </body>
+        const lines1 = a.split(/\r?\n/);
+        const lines2 = b.split(/\r?\n/);
+
+        m = '';
+        let c = 0;
+        for (let i = 0; i < lines1.length; i++) {
+            if (lines1[i] !== lines2[i]) {
+                c = c + 1;
+                l = i + 1
+                m = m + " - Linia " + l + '. -\n';
+                m = m + lines1[i] + '\n';
+                m = m + lines2[i] + '\n\n';
+            }
+        }
+
+        if (c > 0) {
+            m = m + 'Modificări la ' + c + ' linii.';
+        }
+
+        return m;
+    }
+
+    document.getElementById('fileInput')
+        .addEventListener('change', (event) => {
+
+            files = event.target.files;
+
+            Object.keys(files).forEach(i => {
+                languageEncoding(files[i]).then((fileInfo) => addencoding(files[i], fileInfo.encoding));
+            });
+
+            for (let i = 0; i < allfiles.length; i++) {
+                readFile(allfiles[i][0], allfiles[i][1])
+            }
+        });
+
+    function addencoding(file, encoding) {
+        myfile = [file, encoding]
+        allfiles.push(myfile);
+    }
+
+    function readFile(file, encoding) {
+        console.log('read file', file.name, encoding);
+        if (file === undefined || file === null) {
+            return;
+        }
+
+        const filename = file.name;
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            const content = reader.result;
+            document.getElementById("introdus").value = content;
+        };
+
+        reader.onerror = function () {
+            console.error('Error reading the file');
+        };
+
+        reader.readAsText(file, encoding);
+        localStorage.setItem("filename", filename);
+
+        corectare();
+        downloadFile();
+    }
+
+    const downloadFile = () => {
+        const link = document.createElement("a");
+        const content = document.getElementById("corectat").value;
+
+        if (!content.trim()) {
+            return;
+        }
+
+        const file = new Blob([content], {type: 'text/plain'});
+        link.href = URL.createObjectURL(file);
+        name = localStorage.getItem("filename")
+        link.download = name;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+</script>
+
 </html>
