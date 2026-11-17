@@ -5,9 +5,7 @@
 
 <body>
     <h2>Corectare text</h2>
-    <p>
-        Încarcă fișier <input type="file" id="fileInput" multiple><br>
-    </p>
+    <p>Încarcă fișier <input id="fileInput" multiple type="file" onchange="start(this.files)"></p>
     <p>Introducere text <br>
         <textarea id="introdus" rows="12" maxRows="44" placeholder="Introducere text…"
             style="width:100%;"></textarea><br>
@@ -21,8 +19,44 @@
         <textarea id="modificari" rows="9" maxRows="44" placeholder="Modificări" style="width:100%;"></textarea>
     </p>
 </body>
+
 <script>
-    var allfiles = [];
+    function start(files) {
+        Object.keys(files).forEach(i => {
+            languageEncoding(files[i]).then((fileInfo) => addencoding(files[i], fileInfo.encoding));
+        });
+    }
+
+    function addencoding(file, encoding) {
+        myfile = [file, encoding]
+        readFile(file, encoding);
+    }
+
+    function readFile(file, encoding) {
+        console.log('read file', file.name, encoding);
+        if (file === undefined || file === null) {
+            return;
+        }
+
+        const filename = file.name;
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            const content = reader.result;
+            document.getElementById("introdus").value = content;
+
+            corectare();
+            downloadFile(file.name);
+        };
+
+        reader.onerror = function () {
+            console.error('Error reading the file');
+        };
+
+        reader.readAsText(file, encoding);
+        localStorage.setItem("filename", filename);
+
+    }
 
     function corectare(text) {
         if (!text) {
@@ -93,51 +127,7 @@
         return m;
     }
 
-    document.getElementById('fileInput')
-        .addEventListener('change', (event) => {
-
-            files = event.target.files;
-
-            Object.keys(files).forEach(i => {
-                languageEncoding(files[i]).then((fileInfo) => addencoding(files[i], fileInfo.encoding));
-            });
-
-            for (let i = 0; i < allfiles.length; i++) {
-                readFile(allfiles[i][0], allfiles[i][1])
-            }
-        });
-
-    function addencoding(file, encoding) {
-        myfile = [file, encoding]
-        allfiles.push(myfile);
-    }
-
-    function readFile(file, encoding) {
-        console.log('read file', file.name, encoding);
-        if (file === undefined || file === null) {
-            return;
-        }
-
-        const filename = file.name;
-        const reader = new FileReader();
-
-        reader.onload = function () {
-            const content = reader.result;
-            document.getElementById("introdus").value = content;
-        };
-
-        reader.onerror = function () {
-            console.error('Error reading the file');
-        };
-
-        reader.readAsText(file, encoding);
-        localStorage.setItem("filename", filename);
-
-        corectare();
-        downloadFile();
-    }
-
-    const downloadFile = () => {
+    const downloadFile = (name) => {
         const link = document.createElement("a");
         const content = document.getElementById("corectat").value;
 
@@ -147,7 +137,6 @@
 
         const file = new Blob([content], {type: 'text/plain'});
         link.href = URL.createObjectURL(file);
-        name = localStorage.getItem("filename")
         link.download = name;
         link.click();
         URL.revokeObjectURL(link.href);
